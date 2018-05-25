@@ -24,10 +24,8 @@ export class AppComponent implements OnInit {
     if (this.token !== '') {
       this.githubDataService.getPullRequests(this.owner, this.repository, this.myForm.value.token)
       .subscribe(result => {
-        // this.pullRequests = result.pullRequests;
         this.totalCount = result.totalCount;
         this.pullRequests = result.nodes;
-        console.log(result);
       });
     }
   }

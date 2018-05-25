@@ -1,32 +1,54 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      <h1>{{ title }}</h1>
+      <h1 class="display-4 mb-4">{{ title }}</h1>
     </div>
   </div>
   <div class="row">
-    <div class="col-3">
-      <form class="form" (ngSubmit)="onSubmit()" #f="ngForm">
-        <div class="form-group">
-            <label for="token">Token: </label>
-            <input type="password" name="token" [(ngModel)]="token" class="form-control">
-        </div>        
-        <div class="form-group button">
-            <button type="submit" class="btn">Query</button>
+    <div class="col-md-5 col-sm-12">
+      <div class="jumbotron">
+        <div class="row">
+          <div class="col-12">
+            <form (ngSubmit)="onSubmit()" #f="ngForm">
+              <div class="form-row">
+                <label for="token" class="col col-form-label">Token: </label>
+                <div class="col-8">
+                  <input type="password" name="token" [(ngModel)]="token" class="form-control">
+                </div>
+                <div class="col">
+                  <button type="submit" class="btn btn-dark">Query</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-      Repository: {{ repository }}<br>
-      Owner: {{ owner }}<br>
-      Number of open Pull requests: {{ totalCount }}
+        <hr class="my-4">
+        <div class="row">
+          <div class="col-12">
+            Repository: {{ repository }}<br>
+            Owner: {{ owner }}
+            <span *ngIf="totalCount">
+              <br>Number of open Pull requests: {{ totalCount }}
+            </span>
+          </div>
+        </div>
+      </div>      
     </div>
-  </div>
-  <div class="row" *ngFor="let pullRequest of pullRequests">
-    <div class="col-12">
-      <h2>{{ pullRequest.title }}</h2>
-      <p>
-        <span [innerHTML]="pullRequest.bodyHTML"></span> <br>
-        {{ pullRequest.createdAt | date:'longDate' }}
-      </p>
+    <div class="col-md-7 col-sm-12" *ngIf="totalCount">
+      <h2 class="mb-4">Open Pull Requests:</h2>
+      <div class="row" *ngFor="let pullRequest of pullRequests">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h4 class="card-title">{{ pullRequest.title }}</h4>
+              <p class="card-text" [innerHTML]="pullRequest.bodyHTML"></p>
+            </div>
+            <div class="card-footer text-muted">
+              {{ pullRequest.createdAt | date:'longDate' }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
