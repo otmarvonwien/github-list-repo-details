@@ -5,6 +5,10 @@
 Enter on your command line tool:
 `git clone https://github.com/otmarvonwien/github-list-repo-details.git`
 
+## Install dependencies
+
+`npm install`
+
 ## Run development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
