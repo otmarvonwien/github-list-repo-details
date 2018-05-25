@@ -18,6 +18,6 @@ Follow the steps in "[Creating a personal access token for the command line](htt
 
 Request the following scope: public_repo
 
-Enter the token in the input field 'Token'
+Copy the token and paste it to the input field 'Token' in the app
 
 Press the 'Query' Button
