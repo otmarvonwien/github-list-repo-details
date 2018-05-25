@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { environment } from '../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +10,11 @@ export class GitubDataService {
 
   constructor(private http: HttpClient) { }
 
-  getPullRequests(user: string, repo: string): Observable<any> {
+  getPullRequests(user: string, repo: string, token: string): Observable<any> {
     const httpOptions =  {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Bearer ${environment.token}`
+        'Authorization': `Bearer ${token}`
       })
     }
 

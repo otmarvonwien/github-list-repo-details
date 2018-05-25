@@ -5,7 +5,18 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12">
+    <div class="col-3">
+      <form class="form" (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="form-group">
+            <label for="token">Token: </label>
+            <input type="password" name="token" [(ngModel)]="token" class="form-control">
+        </div>        
+        <div class="form-group button">
+            <button
+                type="submit" 
+                class="btn">Query</button>
+        </div>
+      </form><br>
       Repository: {{ repository }}<br>
       Owner: {{ owner }}<br>
       Number of open Pull requests: {{ pullRequests }}
