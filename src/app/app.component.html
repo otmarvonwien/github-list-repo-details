@@ -17,7 +17,16 @@
       </form>
       Repository: {{ repository }}<br>
       Owner: {{ owner }}<br>
-      Number of open Pull requests: {{ pullRequests }}
+      Number of open Pull requests: {{ totalCount }}
+    </div>
+  </div>
+  <div class="row" *ngFor="let pullRequest of pullRequests">
+    <div class="col-12">
+      <h2>{{ pullRequest.title }}</h2>
+      <p>
+        <span [innerHTML]="pullRequest.bodyHTML"></span> <br>
+        {{ pullRequest.createdAt | date:'longDate' }}
+      </p>
     </div>
   </div>
 </div>

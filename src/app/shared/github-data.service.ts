@@ -19,17 +19,34 @@ export class GitubDataService {
     }
 
     const queryString = `
-      query { repository (owner:"${user}", name:"${repo}") { pullRequests (states:OPEN) { totalCount } } }
+      query { 
+        repository (owner:"${user}", name:"${repo}") { 
+          pullRequests (first: 10, states: OPEN, orderBy: {
+            direction: DESC, field: CREATED_AT 
+          }) {
+            totalCount
+            nodes {
+              id
+              title
+              createdAt
+              bodyHTML
+            }
+          } 
+        } 
+      }
     `;
 
-    const request = {
+    const body = {
       query:  queryString
     };
 
-    return this.http.post<any>('https://api.github.com/graphql', request, httpOptions)
+    return this.http.post<any>('https://api.github.com/graphql', body, httpOptions)
       .pipe(
         map(result => {
-          return { pullRequests: result.data.repository.pullRequests.totalCount };
+          return {
+            totalCount: result.data.repository.pullRequests.totalCount,
+            nodes: result.data.repository.pullRequests.nodes
+          }
         }),
         catchError(this.handleError<any>('getPullRequests', repo))
       );

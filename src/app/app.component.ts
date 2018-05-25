@@ -9,7 +9,8 @@ import { NgForm } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   title = 'GitHub Repo Listing';
-  pullRequests: number;
+  pullRequests: Array<any> = new Array();
+  totalCount: number;
   repository = 'Typescript';
   owner = 'Microsoft';
   token = '';
@@ -23,7 +24,10 @@ export class AppComponent implements OnInit {
     if (this.token !== '') {
       this.githubDataService.getPullRequests(this.owner, this.repository, this.myForm.value.token)
       .subscribe(result => {
-        this.pullRequests = result.pullRequests;
+        // this.pullRequests = result.pullRequests;
+        this.totalCount = result.totalCount;
+        this.pullRequests = result.nodes;
+        console.log(result);
       });
     }
   }
