@@ -11,22 +11,26 @@ export class AppComponent implements OnInit {
   title = 'GitHub Repo Listing';
   pullRequests: Array<any> = new Array();
   totalCount: number;
+  itemsPerPage = 10;
   repository = 'Typescript';
   owner = 'Microsoft';
   token = '';
+  pageInfo = {};
   @ViewChild('f') myForm: NgForm;
 
   constructor(private githubDataService: GitubDataService) {}
 
   ngOnInit() {}
 
-  onSubmit() {
+  loadRequests(cursor?: string, nextPage?: boolean) {
     if (this.token !== '') {
-      this.githubDataService.getPullRequests(this.owner, this.repository, this.myForm.value.token)
-      .subscribe(result => {
-        this.totalCount = result.totalCount;
-        this.pullRequests = result.nodes;
-      });
+      this.githubDataService.getPullRequests(this.owner, this.repository, this.token, this.itemsPerPage, cursor, nextPage)
+        .subscribe(result => {
+          this.totalCount = result.totalCount;
+          this.pullRequests = result.nodes;
+          this.pageInfo = result.pageInfo;
+          console.log(result);
+        });
     }
   }
 }

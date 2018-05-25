@@ -9,14 +9,14 @@
       <div class="jumbotron">
         <div class="row">
           <div class="col-12">
-            <form (ngSubmit)="onSubmit()" #f="ngForm">
+            <form (ngSubmit)="loadRequests()" #f="ngForm">
               <div class="form-row">
                 <label for="token" class="col col-form-label">Token: </label>
-                <div class="col-8">
+                <div class="col-7">
                   <input type="password" name="token" [(ngModel)]="token" class="form-control">
                 </div>
                 <div class="col">
-                  <button type="submit" class="btn btn-dark">Query</button>
+                  <button type="submit" class="btn btn-dark"><i class="fa fa-paper-plane"></i> Query</button>
                 </div>
               </div>
             </form>
@@ -36,6 +36,20 @@
     </div>
     <div class="col-md-7 col-sm-12" *ngIf="totalCount">
       <h2 class="mb-4">Open Pull Requests:</h2>
+      <div class="row">
+        <div class="col-12">
+          <div class="btn-group mb-4">
+            <button type="button" 
+              class="btn btn-light" 
+              [disabled]="!pageInfo.hasPreviousPage"
+              (click)="loadRequests(pageInfo.startCursor, false)">Previous</button>
+            <button type="button" 
+              class="btn btn-light" 
+              [disabled]="!pageInfo.hasNextPage" 
+              (click)="loadRequests(pageInfo.endCursor, true)">Next</button>
+          </div>
+        </div>
+      </div>
       <div class="row" *ngFor="let pullRequest of pullRequests">
         <div class="col-12">
           <div class="card mb-4">
@@ -46,6 +60,20 @@
             <div class="card-footer text-muted">
               {{ pullRequest.createdAt | date:'longDate' }}
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="btn-group mb-4">
+            <button type="button" 
+              class="btn btn-light" 
+              [disabled]="!pageInfo.hasPreviousPage"
+              (click)="loadRequests(pageInfo.startCursor, false)">Previous</button>
+            <button type="button" 
+              class="btn btn-light" 
+              [disabled]="!pageInfo.hasNextPage" 
+              (click)="loadRequests(pageInfo.endCursor, true)">Next</button>
           </div>
         </div>
       </div>

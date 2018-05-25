@@ -10,7 +10,8 @@ export class GitubDataService {
 
   constructor(private http: HttpClient) { }
 
-  getPullRequests(user: string, repo: string, token: string): Observable<any> {
+  getPullRequests(user: string, repo: string, token: string, itemsPerPage: number, 
+      cursor?: string, nextPage?: boolean): Observable<any> {
     const httpOptions =  {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -18,10 +19,19 @@ export class GitubDataService {
       })
     }
 
+    // for Pagination
+    let startPoint = '';
+
+    if (nextPage && cursor) {
+      startPoint = `after: "${cursor}", `;
+    } else if (!nextPage && cursor) {
+      startPoint = `before: "${cursor}", `;
+    }
+
     const queryString = `
       query { 
         repository (owner:"${user}", name:"${repo}") { 
-          pullRequests (first: 10, states: OPEN, orderBy: {
+          pullRequests (first: ${itemsPerPage}, ${startPoint}states: OPEN, orderBy: {
             direction: DESC, field: CREATED_AT 
           }) {
             totalCount
@@ -31,10 +41,18 @@ export class GitubDataService {
               createdAt
               bodyHTML
             }
+            pageInfo {
+              endCursor
+              hasNextPage
+              hasPreviousPage
+              startCursor
+            }
           } 
-        } 
+        }
       }
     `;
+
+    console.log(queryString);
 
     const body = {
       query:  queryString
@@ -45,7 +63,8 @@ export class GitubDataService {
         map(result => {
           return {
             totalCount: result.data.repository.pullRequests.totalCount,
-            nodes: result.data.repository.pullRequests.nodes
+            nodes: result.data.repository.pullRequests.nodes,
+            pageInfo: result.data.repository.pullRequests.pageInfo
           }
         }),
         catchError(this.handleError<any>('getPullRequests', repo))
