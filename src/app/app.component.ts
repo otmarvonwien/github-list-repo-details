@@ -25,11 +25,12 @@ export class AppComponent implements OnInit {
   loadRequests(cursor?: string, nextPage?: boolean) {
     if (this.token !== '') {      
       if (this.search !== '') {
-        this.githubDataService.filterPullRequests(this.owner, this.repository, this.token, this.itemsPerPage, this.search)
+        this.githubDataService.filterPullRequests(this.owner, this.repository, this.token, this.itemsPerPage, 
+          this.search, cursor, nextPage)
         .subscribe(result => {
           this.totalCount = 0;
           this.pullRequests = result.nodes;
-          this.pageInfo = {};
+          this.pageInfo = result.pageInfo;
           console.log('Search:', result);
         });
       } else {

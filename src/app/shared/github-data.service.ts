@@ -72,7 +72,8 @@ export class GitubDataService {
       );
   }
 
-  filterPullRequests(user: string, repo: string, token: string, itemsPerPage: number, search: string): Observable<any> {
+  filterPullRequests(user: string, repo: string, token: string, itemsPerPage: number, search: string,
+    cursor?: string, nextPage?: boolean): Observable<any> {
     const httpOptions =  {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -80,10 +81,21 @@ export class GitubDataService {
       })
     }
 
+    // for Pagination
+    let startPoint = '';
+
+    if (nextPage && cursor) {
+      startPoint = `first: ${itemsPerPage}, after: "${cursor}"`;
+    } else if (!nextPage && cursor) {
+      startPoint = `last: ${itemsPerPage}, before: "${cursor}"`;
+    } else {
+      startPoint = `first: ${itemsPerPage}`;
+    }
+
     const queryString = `
       query { 
         search (
-          first: ${itemsPerPage}, type: ISSUE, 
+          ${startPoint}, type: ISSUE, 
           query: "type:pr repo:${user}/${repo} state:open ${search} in:title"
         ) {
           nodes {
@@ -93,6 +105,12 @@ export class GitubDataService {
               createdAt
               bodyHTML
             }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+            hasPreviousPage
+            startCursor
           }
         }
       }
@@ -107,6 +125,7 @@ export class GitubDataService {
         map(result => {
           return {
             nodes: result.data.search.nodes,
+            pageInfo: result.data.search.pageInfo
           }
         }),
         catchError(this.handleError<any>('filterPullRequests', ''))

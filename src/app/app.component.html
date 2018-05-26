@@ -11,18 +11,18 @@
           <div class="col-12">
             <form>
               <div class="form-row mb-2">
-                <label for="token" class="col-2 col-form-label">Token: </label>
-                <div class="col-7">
+                <label for="token" class="col-3 col-form-label">Token: </label>
+                <div class="input-group col-9">
                   <input type="password" name="token" [(ngModel)]="token" class="form-control">
-                </div>
-                <div class="col">
-                  <button class="btn btn-dark" (click)="loadRequests()">
-                    <i class="fa fa-paper-plane"></i> Query
-                  </button>
+                  <div class="input-group-append">
+                    <button class="btn btn-dark" (click)="loadRequests()">
+                      <i class="fa fa-paper-plane"></i> Query
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="form-row">
-                <label for="search" class="col-2 col-form-label">Search: </label>
+                <label for="search" class="col-3 col-form-label">Search: </label>
                 <div class="input-group col-9">
                   <input type="text" name="search" [(ngModel)]="search" class="form-control">
                   <div class="input-group-append">
