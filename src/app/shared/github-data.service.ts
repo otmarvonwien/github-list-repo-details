@@ -7,6 +7,7 @@ import { map, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class GitubDataService {
+  private apiURL = 'https://api.github.com/graphql';
 
   constructor(private http: HttpClient) { }
 
@@ -58,7 +59,7 @@ export class GitubDataService {
       query:  queryString
     };
 
-    return this.http.post<any>('https://api.github.com/graphql', body, httpOptions)
+    return this.http.post<any>(this.apiURL, body, httpOptions)
       .pipe(
         map(result => {
           return {
@@ -71,6 +72,47 @@ export class GitubDataService {
       );
   }
 
+  filterPullRequests(user: string, repo: string, token: string, itemsPerPage: number, search: string): Observable<any> {
+    const httpOptions =  {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${token}`
+      })
+    }
+
+    const queryString = `
+      query { 
+        search (
+          first: ${itemsPerPage}, type: ISSUE, 
+          query: "type:pr repo:${user}/${repo} state:open ${search} in:title"
+        ) {
+          nodes {
+            ... on PullRequest {
+              id
+              title
+              createdAt
+              bodyHTML
+            }
+          }
+        }
+      }
+    `;
+
+    const body = {
+      query:  queryString
+    };
+
+    return this.http.post<any>(this.apiURL, body, httpOptions)
+      .pipe(
+        map(result => {
+          return {
+            nodes: result.data.search.nodes,
+          }
+        }),
+        catchError(this.handleError<any>('filterPullRequests', ''))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
@@ -78,5 +120,5 @@ export class GitubDataService {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
-}
+  }
 }

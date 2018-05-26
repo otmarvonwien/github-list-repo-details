@@ -9,14 +9,27 @@
       <div class="jumbotron">
         <div class="row">
           <div class="col-12">
-            <form (ngSubmit)="loadRequests()" #f="ngForm">
-              <div class="form-row">
-                <label for="token" class="col col-form-label">Token: </label>
+            <form>
+              <div class="form-row mb-2">
+                <label for="token" class="col-2 col-form-label">Token: </label>
                 <div class="col-7">
                   <input type="password" name="token" [(ngModel)]="token" class="form-control">
                 </div>
                 <div class="col">
-                  <button type="submit" class="btn btn-dark"><i class="fa fa-paper-plane"></i> Query</button>
+                  <button class="btn btn-dark" (click)="loadRequests()">
+                    <i class="fa fa-paper-plane"></i> Query
+                  </button>
+                </div>
+              </div>
+              <div class="form-row">
+                <label for="search" class="col-2 col-form-label">Search: </label>
+                <div class="input-group col-9">
+                  <input type="text" name="search" [(ngModel)]="search" class="form-control">
+                  <div class="input-group-append">
+                    <button class="btn btn-dark" type="button" (click)="loadRequests()">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>
@@ -27,18 +40,18 @@
           <div class="col-12">
             Repository: {{ repository }}<br>
             Owner: {{ owner }}
-            <span *ngIf="totalCount">
+            <span *ngIf="totalCount !== 0">
               <br>Number of open Pull requests: {{ totalCount }}
             </span>
           </div>
         </div>
       </div>      
     </div>
-    <div class="col-md-7 col-sm-12" *ngIf="totalCount">
+    <div class="col-md-7 col-sm-12" *ngIf="pullRequests.length !== 0">
       <h2 class="mb-4">Open Pull Requests:</h2>
       <div class="row">
         <div class="col-12">
-          <div class="btn-group mb-4">
+          <div class="btn-group mb-4" *ngIf="pageInfo.hasPreviousPage || pageInfo.hasNextPage">
             <button type="button" 
               class="btn btn-light" 
               [disabled]="!pageInfo.hasPreviousPage"
@@ -65,7 +78,7 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <div class="btn-group mb-4">
+          <div class="btn-group mb-4" *ngIf="pageInfo.hasPreviousPage || pageInfo.hasNextPage">
             <button type="button" 
               class="btn btn-light" 
               [disabled]="!pageInfo.hasPreviousPage"
