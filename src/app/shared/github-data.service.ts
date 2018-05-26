@@ -96,7 +96,7 @@ export class GitubDataService {
       query { 
         search (
           ${startPoint}, type: ISSUE, 
-          query: "type:pr repo:${user}/${repo} state:open ${search} in:title"
+          query: "type:pr repo:${user}/${repo} state:open ${search} in:title,body"
         ) {
           nodes {
             ... on PullRequest {
