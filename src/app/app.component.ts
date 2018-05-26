@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
           this.totalCount = 0;
           this.pullRequests = result.nodes;
           this.pageInfo = result.pageInfo;
-          console.log('Search:', result);
         });
       } else {
         this.githubDataService.getPullRequests(this.owner, this.repository, this.token, this.itemsPerPage, cursor, nextPage)
