@@ -23,15 +23,17 @@ export class GitubDataService {
     let startPoint = '';
 
     if (nextPage && cursor) {
-      startPoint = `after: "${cursor}", `;
+      startPoint = `first: ${itemsPerPage}, after: "${cursor}"`;
     } else if (!nextPage && cursor) {
-      startPoint = `before: "${cursor}", `;
+      startPoint = `last: ${itemsPerPage}, before: "${cursor}"`;
+    } else {
+      startPoint = `first: ${itemsPerPage}`;
     }
 
     const queryString = `
       query { 
         repository (owner:"${user}", name:"${repo}") { 
-          pullRequests (first: ${itemsPerPage}, ${startPoint}states: OPEN, orderBy: {
+          pullRequests (${startPoint}, states: OPEN, orderBy: {
             direction: DESC, field: CREATED_AT 
           }) {
             totalCount
@@ -51,8 +53,6 @@ export class GitubDataService {
         }
       }
     `;
-
-    console.log(queryString);
 
     const body = {
       query:  queryString
